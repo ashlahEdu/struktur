@@ -81,8 +81,33 @@ public class Vertex {
     }
 }
 
+public class StackX {
+    private int maxSize;
+    private int[] stackArray;
+    private int top;
 
-import java.util.Stack;
+    public StackX(int s) {
+        maxSize = s;
+        stackArray = new int[s];
+        top = -1;
+    }
+
+    public void push(int j) {
+        stackArray[++top] = j;
+    }
+
+    public int pop() {
+        return stackArray[top--];
+    }
+
+    public int peek() {
+        return stackArray[top];
+    }
+
+    public boolean isEmpty() {
+        return (top == -1);
+    }
+}
 
 public class Graph {
     private final int MAX_VERTS = 20;
@@ -104,7 +129,7 @@ public class Graph {
         vertexList[nVerts++] = new Vertex(label);
     }
 
-    // Directed
+    // directed
     public void addEdge(int start, int end) {
         adjMat[start][end] = 1;
     }
@@ -121,15 +146,15 @@ public class Graph {
             vertexList[i].wasVisited = false;
     }
 
-    // DFS dari satu vertex
     private void dfsFrom(int start) {
-        Stack<Integer> stack = new Stack<>();
+        StackX stack = new StackX(MAX_VERTS);
+
         vertexList[start].wasVisited = true;
         stack.push(start);
 
         while (!stack.isEmpty()) {
-            int v = stack.peek();
-            int next = getAdjUnvisitedVertex(v);
+            int top = stack.peek();
+            int next = getAdjUnvisitedVertex(top);
 
             if (next == -1) {
                 stack.pop();
@@ -140,7 +165,6 @@ public class Graph {
         }
     }
 
-    // Connectivity Table
     public void connectivityTable() {
         int[][] table = new int[nVerts][nVerts];
 
@@ -152,7 +176,6 @@ public class Graph {
                 table[start][i] = vertexList[i].wasVisited ? 1 : 0;
         }
 
-        // Tampilkan tabel
         System.out.println("Connectivity Table:");
         for (int i = 0; i < nVerts; i++) {
             System.out.print(vertexList[i].label + " : ");
@@ -160,8 +183,6 @@ public class Graph {
                 System.out.print(table[i][j] + " ");
             System.out.println();
         }
-
-        resetFlags();
     }
 }
 
@@ -186,4 +207,3 @@ public class GraphApp2 {
         g.connectivityTable();
     }
 }
-
